@@ -759,28 +759,28 @@ sap.ui.core.Control.extend("ZANA_01.LineChart", {
 						.attr("width", 100)
 						.attr("height", 50)
 						.attr("x", 10)
-						.attr("y", -10)//-22)
+						.attr("y", -10) //-22)
 						.attr("rx", 4)
 						.attr("ry", 4);
 					focus.append("text")
 						.attr("x", 18)
 						.attr("y", 10)
-						.text("Time:");//-2);
-					
+						.text("Time:"); //-2);
+
 					focus.append("text")
 						.attr("class", "tooltip-date")
 						.attr("x", 65)
-						.attr("y", 10);//-2);	
+						.attr("y", 10); //-2);	
 
 					focus.append("text")
 						.attr("x", 18)
-						.attr("y", 30)//18)
+						.attr("y", 30) //18)
 						.text("Value:");
 
 					focus.append("text")
 						.attr("class", "tooltip-likes")
 						.attr("x", 65)
-						.attr("y", 30);//18);
+						.attr("y", 30); //18);
 
 					//Tooltip ends here            
 
@@ -808,8 +808,8 @@ sap.ui.core.Control.extend("ZANA_01.LineChart", {
 						d = x0 - d0.date > d1.date - x0 ? d1 : d0;
 					focus.attr("transform", "translate(" + x(d.date) + "," + y(d.value) + ")");
 					let dtlbl = d.date.getDate() < 10 ? "0" + d.date.getDate() + ":00" : d.date.getDate() + ":00";
-					
-					focus.select(".tooltip-date").text(dtlbl);//dateFormatter(d.date));
+
+					focus.select(".tooltip-date").text(dtlbl); //dateFormatter(d.date));
 					focus.select(".tooltip-likes").text(d.value.toFixed(2));
 				}
 
