@@ -1,0 +1,187 @@
+/* Enter your custom styles here */
+
+.chartContainer {
+    background: white;
+}
+
+.vitalContainer {
+    background: "#D3D3D3";
+    border-style: solid;
+    border-width: 0.5px;
+    border-color: black;
+}
+
+.elementHorizontalSpacingLeftRight {
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
+}
+
+.elementHorizontalSpacingLeft {
+    margin-left: 1rem !important;
+}
+
+.elementHorizontalSpacingRight {
+    margin-right: 1rem !important;
+}
+
+.elementVerticalSpacing {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+}
+
+.vitalName {
+    font-size: 20px !important;
+    font-weight:bold !important;
+    color: black !important;
+    float: right !important;
+    padding: 0px 10px 0px 10px !important;
+    text-align: center !important;
+    height: 50px;
+}
+
+.vitalUOM {
+    font-size: 15px !important;
+    color: black !important;
+    float: right !important;
+    padding: 0px 10px 0px 10px !important;
+    text-align: center !important;
+    height: 50px;
+}
+
+.vitalLow {
+    font-size: 30px !important;
+    margin-left: 0.5rem;
+    height: 50px;
+    color: green;
+}
+
+.vitalHigh {
+    font-size: 30px !important;
+    margin-left: 0.5rem;
+    height: 50px;
+    color: red;
+}
+.filterButton{
+	width: 8rem !important;
+	margin-left: 3rem !important;
+}
+
+.itemSpacing {
+    padding: 10px 10px 10px 10px !important;
+}
+
+.pill .sapMLabel{
+	color: black !important;
+}
+
+.invisiblePill {
+    font-size: 1px !important;
+    background-color: rgb(255,255,255) !important;
+    border: none !important;
+    color: white !important;
+    padding: 10px 20px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    margin: 4px 2px !important;
+    cursor: pointer !important;
+    border-radius: 16px !important;
+}
+
+.pinkPill {
+    font-size: 1px !important;
+    background-color: rgb(219,0,159) !important;
+    border: none !important;
+    color: black !important;
+    padding: 10px 20px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    margin: 4px 2px !important;
+    cursor: pointer !important;
+    border-radius: 16px !important;
+}
+.orangePill {
+    font-size: 1px !important;
+    background-color: rgb(238,131,10) !important;
+    border: none !important;
+    color: black !important;
+    padding: 10px 20px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    margin: 4px 2px !important;
+    cursor: pointer !important;
+    border-radius: 16px !important;
+}
+.greenPill {
+    font-size: 1px !important;
+    background-color: rgb(134,255,43) !important;
+    border: none !important;
+    color: black !important;
+    padding: 10px 20px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    margin: 4px 2px !important;
+    cursor: pointer !important;
+    border-radius: 16px !important;
+}
+.bluePill {
+    font-size: 1px !important;
+    background-color: rgb(24,158,254) !important;
+    border: none !important;
+    color: black !important;
+    padding: 10px 20px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    margin: 4px 2px !important;
+    cursor: pointer !important;
+    border-radius: 16px !important;
+}
+.magentaPill {
+    font-size: 1px !important;
+    background-color: rgb(202,0,63) !important;
+    border: none !important;
+    color: black !important;
+    padding: 10px 20px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    margin: 4px 2px !important;
+    cursor: pointer !important;
+    border-radius: 16px !important;
+}
+.subVitals {
+    font-size: 1px !important;
+    background-color: #ddd !important;
+    border: none !important;
+    color: black !important;
+    padding: 10px 20px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    margin: 4px 2px !important;
+    cursor: pointer !important;
+    border-radius: 16px !important;
+}
+
+
+path { 
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+
+
+
+.tooltip {
+        fill: white;
+        stroke: #000;
+    }
+
+    .tooltip-date, .tooltip-likes {
+        font-weight: bold;
+    }

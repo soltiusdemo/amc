@@ -1,0 +1,103 @@
+<!--<core:FragmentDefinition xmlns="sap.m" xmlns:sap.ui.layout="sap.ui.layout" xmlns:sap.ui.layout.form="sap.ui.layout.form"
+	xmlns:sap.ui.core="sap.ui.core" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:html="http://www.w3.org/1999/xhtml">
+	<Dialog id="id_Dialog" title="{i18n>VITAL_DATA}">
+		<sap.ui.layout:Grid defaultSpan="L8 M8 S12" defaultIndent="L2 M2 S0" width="auto">
+			<sap.ui.layout:content>
+				<Panel id="createPanel">
+					<content>
+						<HBox width="100%" alignItems="Center" justifyContent="Center">
+							<items>
+								<DateTimeInput type="Time" placeholder="{i18n>FROM}" valueFormat="HHmmss" value="{entry>/startTime}" change="validate"
+									class="sapUiSmallMarginEnd elementHorizontalSpacingRight"></DateTimeInput>
+								<DateTimeInput type="Time" placeholder="{i18n>TO}" valueFormat="HHmmss" value="{entry>/endTime}" change="validate"
+									class="sapUiSmallMarginEnd elementHorizontalSpacingLeftRight"></DateTimeInput>
+								<Button text="Filter" type="Emphasized" class="elementHorizontalSpacingLeft"/>
+							</items>
+						</HBox>
+						<Table id="vitalsTable" items="">
+							<columns>
+								<Column width="12em">
+									<CheckBox select="selectAll"/>
+								</Column>
+								<Column width="12em">
+									<Text text="{i18n>DATE}"/>
+								</Column>
+								<Column width="12em">
+									<Text text="{i18n>TIME}"/>
+								</Column>
+								<Column width="12em">
+									<Text text="{i18n>VITAL_NAME}"/>
+								</Column>
+								<Column width="12em">
+									<Text text="{i18n>COUNT}"/>
+								</Column>
+								<Column width="12em">
+									<Text text="{i18n>UNIT}"/>
+								</Column>
+							</columns>
+						</Table>
+					</content>
+				</Panel>
+			</sap.ui.layout:content>
+		</sap.ui.layout:Grid>
+		<beginButton>
+			<Button type="Accept" text="{i18n>EDIT}" press="onSaveDialog"/>
+		</beginButton>
+		<endButton>
+			<Button type="Reject" text="{i18n>CANCEL}" press="onCancelDialog"/>
+		</endButton>
+	</Dialog>
+</core:FragmentDefinition>-->
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<Dialog id="id_Dialog" title="{i18n>VITAL_DATA}">
+		<HBox width="100%" alignItems="Center" justifyContent="Center">
+			<items>
+				<DateTimeInput type="Time" placeholder="{i18n>FROM}" valueFormat="HHmmss" value="{entry>/startTime}" change="validate"
+					class="sapUiSmallMarginEnd elementHorizontalSpacingRight"></DateTimeInput>
+				<DateTimeInput type="Time" placeholder="{i18n>TO}" valueFormat="HHmmss" value="{entry>/endTime}" change="validate"
+					class="sapUiSmallMarginEnd elementHorizontalSpacingLeftRight"></DateTimeInput>
+				<Button text="Filter" type="Emphasized" class="filterButton"/>
+			</items>
+		</HBox>
+		<Table id="vitalTable" items="">
+			<columns>
+				<Column width="3em">
+					<header>
+						<CheckBox select="selectAll"/>
+					</header>
+				</Column>
+				<Column width="12em">
+					<header>
+						<Text text="{i18n>DATE}"/>
+					</header>
+				</Column>
+				<Column minScreenWidth="Tablet" demandPopin="true">
+					<header>
+						<Text text="{i18n>TIME}"/>
+					</header>
+				</Column>
+				<Column minScreenWidth="Desktop" demandPopin="true" hAlign="Center">
+					<header>
+						<Text text="{i18n>VITAL_NAME}"/>
+					</header>
+				</Column>
+				<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
+					<header>
+						<Text text="{i18n>COUNT}"/>
+					</header>
+				</Column>
+				<Column hAlign="End">
+					<header>
+						<Text text="{i18n>UNIT}"/>
+					</header>
+				</Column>
+			</columns>
+		</Table>
+		<beginButton>
+			<Button type="Accept" text="{i18n>DELETE_DATA}" press="onDeleteDialog"/>
+		</beginButton>
+		<endButton>
+			<Button type="Reject" text="{i18n>CANCEL}" press="onCancelDialog"/>
+		</endButton>
+	</Dialog>
+</core:FragmentDefinition>

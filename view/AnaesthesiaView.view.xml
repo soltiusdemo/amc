@@ -1,0 +1,21 @@
+<mvc:View xmlns:l="sap.ui.layout" xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns:form="sap.ui.layout.form" xmlns:sap.me="sap.me"
+	xmlns:sap.ui.layout="sap.ui.layout" xmlns="sap.m" xmlns:viz="sap.viz.ui5.controls" xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+	xmlns:viz.data="sap.viz.ui5.data" xmlns:c="sap.suite.ui.microchart" xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:vizFeeds="sap.viz.ui5.controls.common.feeds" controllerName="ZANA_01.controller.AnaesthesiaView" height="100%">
+	<Page id="S1_page" title="{i18n>ANA_TITLE}" showHeader="true">
+		<subHeader>
+			<Toolbar>
+				<HBox alignItems="End" justifyContent="Start">
+					<items>
+						<Button width="100%" icon="sap-icon://activity-assigned-to-goal" tooltip="Associate Monitor" press="_associateDevice"/>
+					</items>
+				</HBox>
+				<SearchField width="100%" placeholder="{i18n>SEARCH_PLACEHOLDER}" showSearchButton="false" liveChange="_onVitalSearch"/>
+			</Toolbar>
+		</subHeader>
+		<content>
+			<List id="vitalListContainer" headerText="{i18n>VITAL_LIST}" mode="None"></List>
+		</content>
+		<footer></footer>
+	</Page>
+</mvc:View>

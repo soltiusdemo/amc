@@ -1,0 +1,82 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<Dialog title="{i18n>ASSOCIATE_DEVICE}">
+        <content>
+                <Table id="idAssociatedMonitor" visible="false" headerText="The current person is associated to following devices:" 
+                mode="SingleSelectMaster" class="sapUiSizeCompact"  items="{associatedModel>/}">
+				<columns>
+					<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Begin">
+						<Text text="Monitor ID" />
+					</Column>
+					<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
+						<Text text="Nurse-Unit" />
+					</Column>
+					<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
+						<Text text="Room" />
+					</Column>
+					<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
+						<Text text="Bed" />
+					</Column>
+					<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
+						<Text text="Person Name" />
+					</Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true" hAlign="End">
+                          <Text text="Date/Time" />
+                    </Column>
+				</columns>
+				<items>
+					<ColumnListItem>
+						<cells>
+							<Text text="{associatedModel>deviceId}" />
+							<Text text="" />
+							<Text text="{associatedModel>roomId}" />
+							<Text text="{associatedModel>bedId}" />
+							<Text text="" />
+						    <Text text="" />
+                        </cells>
+					</ColumnListItem>
+				</items>
+			</Table>
+				<Table id="tblAssociateMonitor" headerText="Device List:"  mode="SingleSelectMaster" class="sapUiSizeCompact"  items="{monitorModel>/}">
+				<columns>
+					<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Begin">
+						<Text text="Monitor ID" />
+					</Column>
+					<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
+						<Text text="Nurse-Unit" />
+					</Column>
+					<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
+						<Text text="Room" />
+					</Column>
+					<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
+						<Text text="Bed" />
+					</Column>
+					<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
+						<Text text="Person Name" />
+					</Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true" hAlign="End">
+                          <Text text="Date/Time" />
+                    </Column>
+				</columns>
+				<items>
+					<ColumnListItem>
+						<cells>
+							<Text text="{monitorModel>deviceId}" />
+							<Text text="" />
+							<Text text="{monitorModel>roomId}" />
+							<Text text="{monitorModel>bedId}" />
+							<Text text="" />
+						    <Text text="" />
+                        </cells>
+					</ColumnListItem>
+				</items>
+			</Table>
+        </content>
+        <buttons>
+		 <Button id="idDissData" text="{i18n>DISASSOCIATE}" width="20%" enabled="false" press="_onDisAssociate" class="sapUiSizeCompact"/>
+		 <Button id="idAssData" text="{i18n>ASSOCIATE}" width="20%" type="Emphasized" enabled="false" press="_onAssociate" class="sapUiSizeCompact"/>
+		 <Button id="idClose" text="Close" width="20%" type="Reject" press="_onCancelDialogAssociate" class="sapUiSizeCompact"/>
+		</buttons> 		
+    </Dialog>
+</core:FragmentDefinition>
