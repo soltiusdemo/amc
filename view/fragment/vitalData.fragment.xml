@@ -49,7 +49,13 @@
 	</Dialog>
 </core:FragmentDefinition>-->
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-	<Dialog id="id_Dialog" title="{i18n>VITAL_DATA}">
+	<Dialog id="id_Dialog" title="{i18n>VITAL_DATA}" showHeader="false">
+		<Toolbar>
+			<ToolbarSpacer/>
+			<Title text="{i18n>VITAL_DATA}" level="H2"/>
+			<ToolbarSpacer/>
+			<Button icon="sap-icon://edit" type="Transparent" press="_onDialogEditPress" ariaLabelledBy="editButtonLabel"/>
+		</Toolbar>
 		<HBox width="100%" alignItems="Center" justifyContent="Center">
 			<items>
 				<DateTimeInput type="Time" placeholder="{i18n>FROM}" valueFormat="HHmmss" value="{entry>/startTime}" change="validate"
@@ -59,7 +65,7 @@
 				<Button text="Filter" type="Emphasized" class="filterButton"/>
 			</items>
 		</HBox>
-		<Table id="vitalTable" items="">
+		<Table id="vitalTable">
 			<columns>
 				<Column width="3em">
 					<header>
@@ -93,11 +99,16 @@
 				</Column>
 			</columns>
 		</Table>
-		<beginButton>
-			<Button type="Accept" text="{i18n>DELETE_DATA}" press="onDeleteDialog"/>
-		</beginButton>
-		<endButton>
+		<buttons>
+			<Button type="Emphasized" text="{i18n>SUBMIT}" press="onSubmitVital"/>
+			<Button type="Accept" text="{i18n>DELETE_DATA}" press="onDeleteVital"/>
 			<Button type="Reject" text="{i18n>CANCEL}" press="onCancelDialog"/>
-		</endButton>
+		</buttons>	
+		<!--<beginButton>-->
+		<!--	<Button type="Accept" text="{i18n>DELETE_DATA}" press="onDeleteVital"/>-->
+		<!--</beginButton>-->
+		<!--<endButton>-->
+		<!--	<Button type="Reject" text="{i18n>CANCEL}" press="onCancelDialog"/>-->
+		<!--</endButton>-->
 	</Dialog>
 </core:FragmentDefinition>

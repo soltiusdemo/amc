@@ -17,12 +17,55 @@ sap.ui.define([
 		generateID: function(id) {
 
 		},
-		getDialog: function() {
+		getDialog: function(data) {
 			var that = this;
 			if (!this._dialog) {
 				this._dialog = sap.ui.xmlfragment("Dialog", "ZANA_01.view.fragment.vitalData", this);
 			}
-			this.getView().addDependent(this._dialog);
+			var i18nModel = this.getView().getModel("i18n");
+			this._dialog.setModel(i18nModel, "i18n");
+			this.vitalDataTable = sap.ui.core.Fragment.byId("Dialog", "vitalTable");
+			var vitalModel = sap.ui.getCore().getModel("vitalDataModel");
+
+			if (data.length > 0) {
+				this.vitalDataTable.removeAllItems(); //removes all items from the table
+				/*Add Data*/
+				for (let i = 0; i < data.length; i++) {
+					let dt = new Date(data[i].date);
+					var oSingleListEntry = new sap.m.ColumnListItem({
+						//type: "Navigation",
+						tap: function(oEvent) {
+
+						}
+					});
+					oSingleListEntry.addCell(new sap.m.CheckBox({
+
+					}));
+					oSingleListEntry.addCell(new sap.m.Label({
+						text: data[i].date,
+						design: "Bold"
+					}));
+					oSingleListEntry.addCell(new sap.m.Label({
+						text: dt.getDate() < 10 ? "0" + dt.getDate() + ":00" : dt.getDate() + ":00",
+						design: "Bold"
+					}));
+					oSingleListEntry.addCell(new sap.m.Label({
+						text: data[i].vitalName,
+						design: "Bold"
+					}));
+					oSingleListEntry.addCell(new sap.m.Input({
+						enabled: data[i].editEnabled,
+						value: data[i].value.toFixed(2),
+						design: "Bold"
+					}));
+					oSingleListEntry.addCell(new sap.m.Label({
+						text: data[i].uom,
+						design: "Bold"
+					}));
+					this.vitalDataTable.addItem(oSingleListEntry);
+
+				}
+			}
 			return this._dialog;
 		},
 		getAssociationDialog: function() {
@@ -45,8 +88,10 @@ sap.ui.define([
 			this.getView().setModel(oModel);
 			this._oDialog;
 			this.chartList;
+			this.search;
 			this.chartData = [];
 			this.onDialogClick = false;
+			this.editClicked = false;
 
 			//this.mockModel = new JSONModel(sap.ui.require.toUrl("ZANA_01/mockdata") + "/chart.json");
 			//this.getView().setModel("chartModel", this.mockModel);
@@ -59,6 +104,7 @@ sap.ui.define([
 				let data = this._mockGenerateData();
 				this.chartData = data;
 				this._loadVitalList(data);
+				this._initializeSearchFilter(data);
 			}
 
 		},
@@ -167,8 +213,10 @@ sap.ui.define([
 			let min = 0,
 				max = 0;
 			let dateArray = ["2019-01-01", "2019-01-02", "2019-01-03", "2019-01-04", "2019-01-05", "2019-01-06", "2019-01-07", "2019-01-08",
-				"2019-01-09", "2019-01-10","2019-01-11", "2019-01-12", "2019-01-13", "2019-01-14", "2019-01-15", "2019-01-16", "2019-01-17", "2019-01-18",
-				"2019-01-19", "2019-01-20","2019-01-21","2019-01-22","2019-01-23"];
+				"2019-01-09", "2019-01-10", "2019-01-11", "2019-01-12", "2019-01-13", "2019-01-14", "2019-01-15", "2019-01-16", "2019-01-17",
+				"2019-01-18",
+				"2019-01-19", "2019-01-20", "2019-01-21", "2019-01-22", "2019-01-23"
+			];
 			let subVital = _.map(this.chartData, function(o) {
 				if (o.VitalID.toString().toLowerCase().indexOf(vitalName.toString().toLowerCase()) >= 0) return o;
 			});
@@ -179,17 +227,6 @@ sap.ui.define([
 			if (subVitals.length > 0) {
 				if (vitalName == "Vital4") {
 					for (let i = 0; i < dateArray.length; i++) {
-						// for (let j = 0; j < 12; j++) {
-						// 	let d = new Date(dateArray[i]);
-						// 	d.setHours(j);
-						// 	_arr.push({
-						// 		"date": d, //dateArray[i],
-						// 		"value": self._getRandomArbitrary(min, max),
-						// 		"value1": self._getRandomArbitrary(min, max),
-						// 		"value2": self._getRandomArbitrary(min, max),
-						// 		"value3": self._getRandomArbitrary(min, max)
-						// 	});
-						// }
 						_arr.push({
 							"date": dateArray[i],
 							"value": self._getRandomArbitrary(min, max),
@@ -200,17 +237,6 @@ sap.ui.define([
 					}
 				} else {
 					for (let i = 0; i < dateArray.length; i++) {
-						// for (let j = 0; j < 12; j++) {
-						// 	let d = new Date(dateArray[i]);
-						// 	d.setHours(j);
-						// 	_arr.push({
-						// 		"date": d, //dateArray[i],
-						// 		"value": self._getRandomArbitrary(min, max),
-						// 		"value1": self._getRandomArbitrary(min, max),
-						// 		"value2": self._getRandomArbitrary(min, max)
-						// 			//"value3": self._getRandomArbitrary(min, max)
-						// 	});
-						// }
 						_arr.push({
 							"date": dateArray[i],
 							"value": self._getRandomArbitrary(min, max),
@@ -222,29 +248,105 @@ sap.ui.define([
 
 			} else {
 				for (let i = 0; i < dateArray.length; i++) {
-					// for (let j = 0; j < 12; j++) {
-					// 	let d = new Date(dateArray[i]);
-					// 	d.setHours(j);
-					// 	_arr.push({
-					// 		"date": dateArray[i],
-					// 		"value": self._getRandomArbitrary(min, max)
-
-					// 	});
-					// }
 					_arr.push({
-							"date": dateArray[i],
-							"value": self._getRandomArbitrary(min, max)
+						"date": dateArray[i],
+						"vitalName": subVital[0].VitalName,
+						"value": self._getRandomArbitrary(min, max)
 
-						});
+					});
 				}
 			}
 			console.log(_arr);
 			return _arr;
 		},
+		_generateTableMockData: function(vitalID) {
+			let _arr = [];
+			let self = this;
+			let min = 0,
+				max = 0;
+			let dateArray = ["2019-01-01", "2019-01-02", "2019-01-03", "2019-01-04", "2019-01-05", "2019-01-06", "2019-01-07", "2019-01-08",
+				"2019-01-09", "2019-01-10", "2019-01-11", "2019-01-12", "2019-01-13", "2019-01-14", "2019-01-15", "2019-01-16", "2019-01-17",
+				"2019-01-18",
+				"2019-01-19", "2019-01-20", "2019-01-21", "2019-01-22", "2019-01-23"
+			];
+			let subVital = _.map(this.chartData, function(o) {
+				if (o.VitalID.toString().toLowerCase().indexOf(vitalID.toString().toLowerCase()) >= 0) return o;
+			});
+			subVital = _.without(subVital, undefined);
+			min = Number(subVital[0].VitalLow);
+			max = Number(subVital[0].VitalHigh);
+
+			for (let i = 0; i < dateArray.length; i++) {
+				_arr.push({
+					"vitalId": vitalID,
+					"vitalName": subVital[0].VitalName,
+					"date": dateArray[i],
+					"uom": subVital[0].uom,
+					"editEnabled": false,
+					"value": self._getRandomArbitrary(min, max)
+
+				});
+			}
+			return _arr;
+
+		},
 		/*********Screen Handler Events*********/
 		/*@*************************************************************************************************
 		@ - This function to be used to get all subvitals for the vital and plot the pills on the side panel
 		****************************************************************************************************/
+		_initializeSearchFilter: function(data) {
+			this.search = this.byId("search");
+			var filterData = {
+				filterList: data
+			};
+			var searchData = new sap.ui.model.json.JSONModel(filterData);
+			var oItemTemplate = new sap.ui.core.Item({
+				key: '{VitalID}',
+				text: '{VitalName}' // here goes your binding for the property "Name" of your item
+			});
+			this.search.setModel(searchData);
+			this.search.bindItems("/filterList", oItemTemplate);
+		},
+		_onVitalSearchBox: function(oEvent) {
+			let searchFlag = false;
+			let _arr = [];
+			let selectedItems = oEvent.getSource().getSelectedItems();
+			if (selectedItems.length > 0) {
+				searchFlag = true;
+				for(let i=0;i<selectedItems.length;i++){
+					_arr.push(selectedItems[i].getKey());
+				}
+			}
+			let visibleItems = oEvent.getSource().getVisibleItems();
+			if (visibleItems.length > 0) {
+				searchFlag = true;
+				for(let i=0;i<visibleItems.length;i++){
+					_arr.push(visibleItems[i].getKey());
+				}
+			}
+			if(searchFlag){
+				_arr.sort();
+				let formattedData = this._formatSearchList(_arr, true);
+				this._loadVitalList(formattedData);
+			}
+			
+		},
+		_onDialogEditPress: function() {
+			let that = this;
+			if (that.editClicked != undefined) {
+				that.editClicked = !that.editClicked;
+			} else {
+				that.editClicked = true;
+			}
+			this.vitalDataTable = sap.ui.core.Fragment.byId("Dialog", "vitalTable");
+			this.vitalDataTable.getItems().map(function(oItem) {
+				if (that.editClicked != undefined)
+					oItem.getCells()[4].setEnabled(that.editClicked);
+				else
+					oItem.getCells()[4].setEnabled(true);
+				return oItem; //.getBindingContext().getObject();
+			});
+		},
 		_associateDevice: function() {
 			this.onDialogClick = true;
 			this.getAssociationDialog().open();
@@ -287,20 +389,9 @@ sap.ui.define([
 			return oControl;
 		},
 		_getSubVital: function(vitalName) {
-			// let _array = [];
-			// for (let i = 0; i < 3; i++) {
-			// 	array.push({
-			// 		"subVitalID": "Vital1" + (i + 1).toString(),
-			// 		"parentVitalID": vitalName,
-			// 	});
-			// }
-			// return _array;
+
 		},
 		_getChartData: function(vitalName) {
-			// let subvitals = _getSubVital(vitalName);
-			// if (subvitals && subvitals.length > 0) {
-
-			// }
 			return this._generateMockChart(vitalName);
 		},
 		_plotChart: function(chartID, vitalName) {
@@ -353,7 +444,7 @@ sap.ui.define([
 										new sap.m.VBox({
 											items: [
 												new sap.m.Label({
-													text: obj.VitalHigh,//VitalLow,
+													text: obj.VitalHigh, //VitalLow,
 													displayOnly: true,
 													height: "50px"
 												}).addStyleClass("vitalHigh"),
@@ -370,7 +461,7 @@ sap.ui.define([
 												new sap.m.Label({
 													alignItems: sap.m.FlexAlignItems.Left,
 													justifyContent: sap.m.FlexJustifyContent.Left,
-													text: obj.VitalLow,//VitalHigh,
+													text: obj.VitalLow, //VitalHigh,
 													displayOnly: true,
 													height: "50px"
 												}).addStyleClass("vitalLow"),
@@ -380,7 +471,7 @@ sap.ui.define([
 											//Vital Click Event
 											//debugger;
 											console.log("Here");
-											self._showVitalData(obj.VitalName);
+											self._showVitalData(obj.VitalID);
 										}),
 									],
 								}).addStyleClass("vitalContainer elementHorizontalSpacingRight"),
@@ -397,29 +488,43 @@ sap.ui.define([
 				this.chartList.addItem(vitalTemplate);
 			}
 		},
-		_formatSearchList: function(searchParam) {
-			if (this.chartData) {
-				var refData = this.chartData.map(function(x) {
-					return x;
-				});
-				console.log("Ref Data" + refData);
+		_formatSearchList: function(searchParam, isByArray) {
+			if (isByArray) {
+				if (this.chartData) {
+					var refData = this.chartData.map(function(x) {
+						return x;
+					});
+					var formattedSearchList = _(refData).keyBy('VitalID').at(searchParam).value();
+					// Remove undefines from the array
+					//debugger;
+					formattedSearchList = _.without(formattedSearchList, undefined);
+					return formattedSearchList;
+				}
+			} else {
+				if (this.chartData) {
+					var refData = this.chartData.map(function(x) {
+						return x;
+					});
+					console.log("Ref Data" + refData);
 
-				var formattedSearchList = _.map(refData, function(o) {
-					if (o.VitalName.toString().toLowerCase().indexOf(searchParam.toString().toLowerCase()) >= 0) return o;
-				});
+					var formattedSearchList = _.map(refData, function(o) {
+						if (o.VitalName.toString().toLowerCase().indexOf(searchParam.toString().toLowerCase()) >= 0) return o;
+					});
 
-				// Remove undefines from the array
-				//debugger;
-				formattedSearchList = _.without(formattedSearchList, undefined);
-				return formattedSearchList;
+					// Remove undefines from the array
+					//debugger;
+					formattedSearchList = _.without(formattedSearchList, undefined);
+					return formattedSearchList;
+				}
 			}
+
 		},
 		_onVitalSearch: function(oEvent) {
 			// debugger;
 			var vitalToSearch = oEvent.getSource().getValue();
 			console.log("Search Param" + vitalToSearch);
 			if (vitalToSearch != "" || vitalToSearch != undefined) {
-				let formattedData = this._formatSearchList(vitalToSearch);
+				let formattedData = this._formatSearchList(vitalToSearch, false);
 				this._loadVitalList(formattedData);
 			} else {
 				this._loadVitalList(this.chartData);
@@ -428,9 +533,26 @@ sap.ui.define([
 		},
 		_showVitalData: function(vitalName) {
 			this.onDialogClick = true;
-			this.getDialog().open();
+			let data = this._generateTableMockData(vitalName);
+			var vitalDataModel = new sap.ui.model.json.JSONModel();
+			// vitalDataModel.setData({
+			// 	"vitalData": data
+			// });
+			vitalDataModel.setData(data);
+			this.getView().setModel(vitalDataModel, "vitalDataModel");
+			sap.ui.getCore().setModel(vitalDataModel, "vitalDataModel");
+			this.editClicked = false;
+			this.getDialog(data).open();
 		},
-		onDeleteDialog: function(ctx) {
+		onSubmitVital: function(ctx) {
+			var dialog = ctx.getSource().oParent;
+			dialog.close();
+			this.onDialogClick = true;
+			/*Logic to read items from table which are selected*/
+			var msg = 'Vital Data has been updated';
+			MessageToast.show(msg);
+		},
+		onDeleteVital: function(ctx) {
 			var dialog = ctx.getSource().oParent;
 			dialog.close();
 			this.onDialogClick = true;
