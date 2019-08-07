@@ -26,7 +26,7 @@ sap.ui.define([
 			this._dialog.setModel(i18nModel, "i18n");
 			this.vitalDataTable = sap.ui.core.Fragment.byId("Dialog", "vitalTable");
 			var vitalModel = sap.ui.getCore().getModel("vitalDataModel");
-			
+
 			if (data.length > 0) {
 				this.vitalDataTable.removeAllItems(); //removes all items from the table
 				/*Add Data*/
@@ -88,6 +88,7 @@ sap.ui.define([
 			this.getView().setModel(oModel);
 			this._oDialog;
 			this.chartList;
+			this.search;
 			this.chartData = [];
 			this.onDialogClick = false;
 			this.editClicked = false;
@@ -103,6 +104,7 @@ sap.ui.define([
 				let data = this._mockGenerateData();
 				this.chartData = data;
 				this._loadVitalList(data);
+				this._initializeSearchFilter(data);
 			}
 
 		},
@@ -248,6 +250,7 @@ sap.ui.define([
 				for (let i = 0; i < dateArray.length; i++) {
 					_arr.push({
 						"date": dateArray[i],
+						"vitalName": subVital[0].VitalName,
 						"value": self._getRandomArbitrary(min, max)
 
 					});
@@ -291,21 +294,57 @@ sap.ui.define([
 		/*@*************************************************************************************************
 		@ - This function to be used to get all subvitals for the vital and plot the pills on the side panel
 		****************************************************************************************************/
+		_initializeSearchFilter: function(data) {
+			this.search = this.byId("search");
+			var filterData = {
+				filterList: data
+			};
+			var searchData = new sap.ui.model.json.JSONModel(filterData);
+			var oItemTemplate = new sap.ui.core.Item({
+				key: '{VitalID}',
+				text: '{VitalName}' // here goes your binding for the property "Name" of your item
+			});
+			this.search.setModel(searchData);
+			this.search.bindItems("/filterList", oItemTemplate);
+		},
+		_onVitalSearchBox: function(oEvent) {
+			let searchFlag = false;
+			let _arr = [];
+			let selectedItems = oEvent.getSource().getSelectedItems();
+			if (selectedItems.length > 0) {
+				searchFlag = true;
+				for(let i=0;i<selectedItems.length;i++){
+					_arr.push(selectedItems[i].getKey());
+				}
+			}
+			let visibleItems = oEvent.getSource().getVisibleItems();
+			if (visibleItems.length > 0) {
+				searchFlag = true;
+				for(let i=0;i<visibleItems.length;i++){
+					_arr.push(visibleItems[i].getKey());
+				}
+			}
+			if(searchFlag){
+				_arr.sort();
+				let formattedData = this._formatSearchList(_arr, true);
+				this._loadVitalList(formattedData);
+			}
+			
+		},
 		_onDialogEditPress: function() {
 			let that = this;
-			if(that.editClicked != undefined) {
+			if (that.editClicked != undefined) {
 				that.editClicked = !that.editClicked;
-			}
-			else{
+			} else {
 				that.editClicked = true;
 			}
 			this.vitalDataTable = sap.ui.core.Fragment.byId("Dialog", "vitalTable");
-			this.vitalDataTable.getItems().map(function (oItem){
-				if(that.editClicked != undefined)
-				oItem.getCells()[4].setEnabled(that.editClicked);
+			this.vitalDataTable.getItems().map(function(oItem) {
+				if (that.editClicked != undefined)
+					oItem.getCells()[4].setEnabled(that.editClicked);
 				else
-				oItem.getCells()[4].setEnabled(true);
-				return oItem;//.getBindingContext().getObject();
+					oItem.getCells()[4].setEnabled(true);
+				return oItem; //.getBindingContext().getObject();
 			});
 		},
 		_associateDevice: function() {
@@ -449,29 +488,43 @@ sap.ui.define([
 				this.chartList.addItem(vitalTemplate);
 			}
 		},
-		_formatSearchList: function(searchParam) {
-			if (this.chartData) {
-				var refData = this.chartData.map(function(x) {
-					return x;
-				});
-				console.log("Ref Data" + refData);
+		_formatSearchList: function(searchParam, isByArray) {
+			if (isByArray) {
+				if (this.chartData) {
+					var refData = this.chartData.map(function(x) {
+						return x;
+					});
+					var formattedSearchList = _(refData).keyBy('VitalID').at(searchParam).value();
+					// Remove undefines from the array
+					//debugger;
+					formattedSearchList = _.without(formattedSearchList, undefined);
+					return formattedSearchList;
+				}
+			} else {
+				if (this.chartData) {
+					var refData = this.chartData.map(function(x) {
+						return x;
+					});
+					console.log("Ref Data" + refData);
 
-				var formattedSearchList = _.map(refData, function(o) {
-					if (o.VitalName.toString().toLowerCase().indexOf(searchParam.toString().toLowerCase()) >= 0) return o;
-				});
+					var formattedSearchList = _.map(refData, function(o) {
+						if (o.VitalName.toString().toLowerCase().indexOf(searchParam.toString().toLowerCase()) >= 0) return o;
+					});
 
-				// Remove undefines from the array
-				//debugger;
-				formattedSearchList = _.without(formattedSearchList, undefined);
-				return formattedSearchList;
+					// Remove undefines from the array
+					//debugger;
+					formattedSearchList = _.without(formattedSearchList, undefined);
+					return formattedSearchList;
+				}
 			}
+
 		},
 		_onVitalSearch: function(oEvent) {
 			// debugger;
 			var vitalToSearch = oEvent.getSource().getValue();
 			console.log("Search Param" + vitalToSearch);
 			if (vitalToSearch != "" || vitalToSearch != undefined) {
-				let formattedData = this._formatSearchList(vitalToSearch);
+				let formattedData = this._formatSearchList(vitalToSearch, false);
 				this._loadVitalList(formattedData);
 			} else {
 				this._loadVitalList(this.chartData);

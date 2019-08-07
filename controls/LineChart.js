@@ -548,11 +548,14 @@ sap.ui.core.Control.extend("ZANA_01.LineChart", {
 
 				//color function pulls from array of colors stored in color.js
 				var color = d3.scale.ordinal().range(colorScale);
-				// var	color = d3.scale.linear().domain([1,length])
-				// 			.interpolate(d3.interpolateHcl)
-				// 			.range([d3.rgb("#DB009F"), d3.rgb('#EE830A'), d3.rgb('#86FF2B'), d3.rgb('#189EFE')]);
 				color.domain(d3.keys(data[0]).filter(function(key) {
-					return key !== "date";
+					if(key == "date" || key == "vitalName"){
+						return false;
+					}
+					else{
+						return true;
+					}
+					//return key !== "date";
 				}));
 
 				var emotions;
@@ -661,6 +664,37 @@ sap.ui.core.Control.extend("ZANA_01.LineChart", {
 						.attr("dx", 8)
 						.attr("dy", "1em");
 
+					//This is for tooltip
+					focus.append("rect")
+						.attr("class", "tooltip")
+						.attr("width", 100)
+						.attr("height", 50)
+						.attr("x", 10)
+						.attr("y", -10) //-22)
+						.attr("rx", 4)
+						.attr("ry", 4);
+					focus.append("text")
+						.attr("x", 18)
+						.attr("y", 10)
+						.text("Time:"); //-2);
+
+					focus.append("text")
+						.attr("class", "tooltip-date")
+						.attr("x", 65)
+						.attr("y", 10); //-2);	
+
+					focus.append("text")
+						.attr("x", 18)
+						.attr("y", 30) //18)
+						.text("Value:");
+
+					focus.append("text")
+						.attr("class", "tooltip-likes")
+						.attr("x", 65)
+						.attr("y", 30); //18);
+
+					//Tooltip ends here           	
+
 					// append the rectangle to capture mouse
 					svg.append("rect")
 						.attr("width", width)
@@ -674,7 +708,19 @@ sap.ui.core.Control.extend("ZANA_01.LineChart", {
 							focus.style("display", "none");
 						})
 						.on("mousemove", function() {
+							var x0 = x.invert(d3.mouse(this)[0]),
+								i = bisectDate(data, x0, 1),
+								d0 = data[i - 1],
+								d1 = data[i],
+								d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+							focus.attr("transform", "translate(" + x(d.date) + "," + y(d.value) + ")");
+							let dtlbl = d.date.getDate() < 10 ? "0" + d.date.getDate() + ":00" : d.date.getDate() + ":00";
 
+							focus.select(".tooltip-date").text(dtlbl); //dateFormatter(d.date));
+							focus.select(".tooltip-likes").text(d.value.toFixed(2));
+							focus.select(".tooltip-likes").text(d.value1.toFixed(2));
+							focus.select(".tooltip-likes").text(d.value2.toFixed(2));
+							focus.select(".tooltip-likes").text(d.value3.toFixed(2));
 						});
 
 				} else {
@@ -772,14 +818,14 @@ sap.ui.core.Control.extend("ZANA_01.LineChart", {
 						.attr("x", 65)
 						.attr("y", 10); //-2);	
 
-					focus.append("text")
-						.attr("x", 18)
-						.attr("y", 30) //18)
-						.text("Value:");
+					// focus.append("text")
+					// 	.attr("x", 18)
+					// 	.attr("y", 30) //18)
+					// 	.text("Value:");
 
 					focus.append("text")
 						.attr("class", "tooltip-likes")
-						.attr("x", 65)
+						.attr("x", 18)
 						.attr("y", 30); //18);
 
 					//Tooltip ends here            
@@ -810,7 +856,7 @@ sap.ui.core.Control.extend("ZANA_01.LineChart", {
 					let dtlbl = d.date.getDate() < 10 ? "0" + d.date.getDate() + ":00" : d.date.getDate() + ":00";
 
 					focus.select(".tooltip-date").text(dtlbl); //dateFormatter(d.date));
-					focus.select(".tooltip-likes").text(d.value.toFixed(2));
+					focus.select(".tooltip-likes").text(d.vitalName + ":" + d.value.toFixed(2));
 				}
 
 			}
